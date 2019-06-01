@@ -1,0 +1,55 @@
+{
+    "Units": [
+        {
+            "Type": "Harvester",
+            "Ratio": 1,
+            "Body": [
+                "MOVE",
+                "WORK",
+                "WORK"
+            ]
+        },
+        {
+            "Type": "Carrier",
+            "Ratio": 1,
+            "Body": [
+                "MOVE",
+                "MOVE",
+                "MOVE",
+                "CARRY",
+                "CARRY",
+                "CARRY"
+            ]
+        },
+        {
+            "Type": "Upgrader",
+            "Ratio": 1,
+            "Body": [
+                "MOVE",
+                "WORK",
+                "WORK",
+                "CARRY"
+            ]
+        },
+        {
+            "Type": "Builder",
+            "Ratio": 2,
+            "Body": [
+                "MOVE",
+                "WORK",
+                "WORK",
+                "CARRY"
+            ]
+        },
+        {
+            "Type": "Repairer",
+            "Ratio": 1,
+            "Body": [
+                "MOVE",
+                "WORK",
+                "WORK",
+                "CARRY"
+            ]
+        }
+    ]
+}
