@@ -20,9 +20,15 @@ class SpawnManager {
         });
     }
 }
-let unitManager = new SpawnManager();
-unitManager.spawn();
-let creeps = Game.creeps;
-for (let x = 0, creep; creep = creeps[x]; x++) {
-    Harvester.run(creep);
-}
+define("main", ["require", "exports"], function (require, exports) {
+    "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
+    let unitManager = new SpawnManager();
+    exports.loop = () => {
+        unitManager.spawn();
+        let creeps = Game.creeps;
+        for (let x = 0, creep; creep = creeps[x]; x++) {
+            Harvester.run(creep);
+        }
+    };
+});
