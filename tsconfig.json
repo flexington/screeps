@@ -1,10 +1,10 @@
 {
     "compilerOptions": {
-      "module": "esnext",
-      "lib": ["esnext"],
-      "target": "es2017",
+      "module": "amd",
+      "target": "es6",
       "moduleResolution": "Node",
       "outDir": "dist",
+      "outFile": "dist/main.js",
       "baseUrl": "TS/",
       "sourceMap": true,
       "strict": false,
