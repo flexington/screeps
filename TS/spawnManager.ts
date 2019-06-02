@@ -1,9 +1,5 @@
 class SpawnManager {
 
-    public run() {
-
-    }
-
     private checkUnits(type: string) {
         // Unit ratio
         // let unitTypes: number = 6;
