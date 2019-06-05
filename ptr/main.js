@@ -92,6 +92,40 @@ class Helper {
         }
     }
 }
+class Repairer {
+    static run(creep) {
+        if (!creep.memory.isBusy) {
+            Helper.getEnergy(creep);
+        }
+        else if (creep.memory.isBusy) {
+            let structures = creep.room.find(FIND_STRUCTURES, {
+                filter: (f) => {
+                    return f.structureType != STRUCTURE_CONTROLLER && f.structureType != STRUCTURE_WALL && f.hits < f.hitsMax;
+                }
+            });
+            if (structures.length > 0) {
+                if (structures.length > 1) {
+                    structures = _.sortBy(structures, [function (s) { return s.hitsMax - s.hits; }]);
+                }
+                if (creep.repair(structures[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(structures[0]);
+                }
+            }
+        }
+    }
+}
+class Upgrader {
+    static run(creep) {
+        if (creep.memory.isBusy) {
+            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(creep.room.controller);
+            }
+        }
+        else if (!creep.memory.isBusy) {
+            Helper.getEnergy(creep);
+        }
+    }
+}
 class SpawnManager {
     checkUnits(type) {
         let unitTypes = 6;
@@ -174,46 +208,21 @@ module.exports.loop = () => {
     let creeps = Game.creeps;
     for (let name in creeps) {
         let creep = creeps[name];
-        if (creep.memory.role === 'harvester') {
+        if (creep.memory.role === 'builder') {
+            Builder.run(creep);
+        }
+        else if (creep.memory.role === 'carrier') {
+            Carrier.run(creep);
+        }
+        else if (creep.memory.role === 'harvester') {
             Harvester.run(creep);
         }
-        if (creep.memory.role === 'carrier') {
-            Carrier.run(creep);
+        else if (creep.memory.role === 'repairer') {
+            Repairer.run(creep);
+        }
+        else if (creep.memory.role === 'upgrader') {
+            Upgrader.run(creep);
         }
     }
 };
-class Repairer {
-    static run(creep) {
-        if (!creep.memory.isBusy) {
-            Helper.getEnergy(creep);
-        }
-        else if (creep.memory.isBusy) {
-            let structures = creep.room.find(FIND_STRUCTURES, {
-                filter: (f) => {
-                    return f.structureType != STRUCTURE_CONTROLLER && f.structureType != STRUCTURE_WALL && f.hits < f.hitsMax;
-                }
-            });
-            if (structures.length > 0) {
-                if (structures.length > 1) {
-                    structures = _.sortBy(structures, [function (s) { return s.hitsMax - s.hits; }]);
-                }
-                if (creep.repair(structures[0]) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(structures[0]);
-                }
-            }
-        }
-    }
-}
-class Upgrader {
-    static run(creep) {
-        if (creep.memory.isBusy) {
-            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(creep.room.controller);
-            }
-        }
-        else if (!creep.memory.isBusy) {
-            Helper.getEnergy(creep);
-        }
-    }
-}
 //# sourceMappingURL=main.js.map
