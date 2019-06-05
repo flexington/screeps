@@ -10,6 +10,9 @@ class Builder {
                     creep.moveTo(constructionSite);
                 }
             }
+            else if (creep.carry.energy == 0) {
+                creep.memory.isBusy = false;
+            }
         }
     }
 }
@@ -116,6 +119,9 @@ class Repairer {
                 if (creep.repair(structures[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(structures[0]);
                 }
+                else if (creep.carry.energy == 0) {
+                    creep.memory.isBusy = false;
+                }
             }
         }
     }
@@ -125,6 +131,9 @@ class Upgrader {
         if (creep.memory.isBusy) {
             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller);
+            }
+            else if (creep.carry.energy == 0) {
+                creep.memory.isBusy = false;
             }
         }
         else if (!creep.memory.isBusy) {

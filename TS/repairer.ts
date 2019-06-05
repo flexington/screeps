@@ -14,6 +14,8 @@ class Repairer {
                 }
                 if (creep.repair(structures[0]) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(structures[0]);
+                } else if (creep.carry.energy == 0) {
+                    creep.memory.isBusy = false;
                 }
             }
         }

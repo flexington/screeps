@@ -10,6 +10,8 @@ class Builder {
                 if (creep.build(constructionSite) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(constructionSite);
                 }
+            }else if (creep.carry.energy == 0) {
+                creep.memory.isBusy = false;
             }
         }
     }

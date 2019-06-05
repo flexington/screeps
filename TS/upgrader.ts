@@ -3,6 +3,8 @@ class Upgrader {
         if (creep.memory.isBusy) {
             if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(creep.room.controller);
+            }else if (creep.carry.energy == 0) {
+                creep.memory.isBusy = false;
             }
         } else if (!creep.memory.isBusy) {
             Helper.getEnergy(creep);
