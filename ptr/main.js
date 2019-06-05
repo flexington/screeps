@@ -24,31 +24,31 @@ class SpawnManager {
         let builderCurrent = _.filter(Game.creeps, (c) => c.memory.role == 'builder').length;
         let repairerCurrent = _.filter(Game.creeps, (c) => c.memory.role == 'repairer').length;
         if (type === 'harvester') {
-            if (harvesterCurrent / totalScreeps < harvesterRatio) {
+            if (harvesterCurrent === 0 || harvesterCurrent / totalScreeps < harvesterRatio) {
                 return true;
             }
             return false;
         }
         else if (type === 'carrier') {
-            if (carrierCurrent / totalScreeps < carrierRatio) {
+            if (carrierCurrent === 0 || carrierCurrent / totalScreeps < carrierRatio) {
                 return true;
             }
             return false;
         }
         else if (type === 'upgrader') {
-            if (upgraderCurrent / totalScreeps < upgraderRatio) {
+            if (upgraderCurrent === 0 || upgraderCurrent / totalScreeps < upgraderRatio) {
                 return true;
             }
             return false;
         }
         else if (type === 'builder') {
-            if (builderCurrent / totalScreeps < builderRatio) {
+            if (builderCurrent === 0 || builderCurrent / totalScreeps < builderRatio) {
                 return true;
             }
             return false;
         }
         else if (type === 'repairer') {
-            if (repairerCurrent / totalScreeps < repairerRatio) {
+            if (repairerCurrent === 0 || repairerCurrent / totalScreeps < repairerRatio) {
                 return true;
             }
             return false;
@@ -59,7 +59,7 @@ class SpawnManager {
     }
     spawn() {
         if (this.checkUnits('harvester')) {
-            Game.spawns['London'].spawnCreep([MOVE, WORK, WORK], 'H-' + Game.time, {
+            Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK], 'H-' + Game.time, {
                 memory: { role: 'harvester', isBusy: false }
             });
         }
@@ -87,9 +87,14 @@ class SpawnManager {
 }
 let unitManager = new SpawnManager();
 module.exports.loop = () => {
+    unitManager.spawn();
     let creeps = Game.creeps;
-    for (let x = 0, creep; creep = creeps[x]; x++) {
-        Harvester.run(creep);
+    for (let name in creeps) {
+        let creep = creeps[name];
+        if (creep.memory.role === 'harvester') {
+            Harvester.run(creep);
+        }
+        if (creep.memory.role === 'carrier') { }
     }
 };
 //# sourceMappingURL=main.js.map
