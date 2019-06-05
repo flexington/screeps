@@ -109,7 +109,8 @@ class Repairer {
         else if (creep.memory.isBusy) {
             let structures = creep.room.find(FIND_STRUCTURES, {
                 filter: (f) => {
-                    return f.structureType != STRUCTURE_CONTROLLER && f.structureType != STRUCTURE_WALL && f.hits < f.hitsMax;
+                    return f.structureType != STRUCTURE_CONTROLLER &&
+                        f.structureType != STRUCTURE_WALL && f.hits < f.hitsMax;
                 }
             });
             if (structures.length > 0) {
@@ -214,6 +215,13 @@ class SpawnManager {
             Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'R-' + Game.time, {
                 memory: { role: 'repairer', isBusy: false }
             });
+        }
+    }
+    cleanup() {
+        for (var name in Memory.creeps) {
+            if (!Game.creeps[name]) {
+                delete Memory.creeps[name];
+            }
         }
     }
 }

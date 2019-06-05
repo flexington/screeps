@@ -5,7 +5,8 @@ class Repairer {
         } else if (creep.memory.isBusy) {
             let structures = creep.room.find(FIND_STRUCTURES, {
                 filter: (f) => {
-                    return f.structureType != STRUCTURE_CONTROLLER && f.structureType != STRUCTURE_WALL && f.hits < f.hitsMax;// && f.structureType != STRUCTURE_CONTROLLER;
+                    return f.structureType != STRUCTURE_CONTROLLER &&
+                        f.structureType != STRUCTURE_WALL && f.hits < f.hitsMax;
                 }
             });
             if (structures.length > 0) {
