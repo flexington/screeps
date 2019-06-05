@@ -4,11 +4,13 @@
 let unitManager: SpawnManager = new SpawnManager();
 
 module.exports.loop = () => {
-    // unitManager.spawn();
+    unitManager.spawn();
 
     let creeps = Game.creeps;
-    for (let x = 0, creep: Creep; creep = creeps[x]; x++) {
-        Harvester.run(creep);
+    for (let name in creeps) {
+        let creep = creeps[name];
+        if (creep.memory.role === 'harvester') { Harvester.run(creep); }
+        if(creep.memory.role === 'carrier') {}
     }
 }
 
