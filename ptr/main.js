@@ -1,3 +1,18 @@
+class Builder {
+    static run(creep) {
+        if (!creep.memory.isBusy) {
+            Helper.getEnergy(creep);
+        }
+        if (creep.memory.isBusy) {
+            let constructionSite = creep.pos.findClosestByPath(FIND_CONSTRUCTION_SITES);
+            if (constructionSite != undefined) {
+                if (creep.build(constructionSite) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(constructionSite);
+                }
+            }
+        }
+    }
+}
 class Carrier {
     static run(creep) {
         if (!creep.memory.isBusy) {
@@ -50,6 +65,30 @@ class Harvester {
         }
         else {
             creep.drop(RESOURCE_ENERGY);
+        }
+    }
+}
+class Helper {
+    static getEnergy(creep) {
+        let containers = creep.room.find(FIND_STRUCTURES, {
+            filter: (f) => {
+                return f.structureType == STRUCTURE_CONTAINER && f.store[RESOURCE_ENERGY] > 0;
+            }
+        });
+        if (containers.length > 0) {
+            let conatiner = creep.pos.findClosestByPath(containers);
+            if (creep.withdraw(conatiner, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(conatiner);
+            }
+        }
+        else {
+            let sources = creep.room.find(FIND_DROPPED_RESOURCES);
+            let source = creep.pos.findClosestByPath(sources);
+            if (source != undefined) {
+                if (creep.pickup(source) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(source);
+                }
+            }
         }
     }
 }
@@ -143,4 +182,38 @@ module.exports.loop = () => {
         }
     }
 };
+class Repairer {
+    static run(creep) {
+        if (!creep.memory.isBusy) {
+            Helper.getEnergy(creep);
+        }
+        else if (creep.memory.isBusy) {
+            let structures = creep.room.find(FIND_STRUCTURES, {
+                filter: (f) => {
+                    return f.structureType != STRUCTURE_CONTROLLER && f.structureType != STRUCTURE_WALL && f.hits < f.hitsMax;
+                }
+            });
+            if (structures.length > 0) {
+                if (structures.length > 1) {
+                    structures = _.sortBy(structures, [function (s) { return s.hitsMax - s.hits; }]);
+                }
+                if (creep.repair(structures[0]) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(structures[0]);
+                }
+            }
+        }
+    }
+}
+class Upgrader {
+    static run(creep) {
+        if (creep.memory.isBusy) {
+            if (creep.upgradeController(creep.room.controller) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(creep.room.controller);
+            }
+        }
+        else if (!creep.memory.isBusy) {
+            Helper.getEnergy(creep);
+        }
+    }
+}
 //# sourceMappingURL=main.js.map
