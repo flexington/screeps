@@ -1,0 +1,24 @@
+{
+  "name": "screeps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@types/lodash": "^4.14.133",
+    "@types/screeps": "^2.5.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/flexington/screeps.git"
+  },
+  "author": "Sandro Paetzold",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/flexington/screeps/issues"
+  },
+  "homepage": "https://github.com/flexington/screeps#readme"
+}
