@@ -10,6 +10,8 @@ class Helper {
             let conatiner = creep.pos.findClosestByPath(containers);
             if (creep.withdraw(conatiner, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(conatiner);
+            } else if (creep.carry.energy == creep.carryCapacity) {
+                creep.memory.isBusy = true;
             }
         } else {
             let sources = creep.room.find(FIND_DROPPED_RESOURCES);
@@ -17,6 +19,8 @@ class Helper {
             if (source != undefined) {
                 if (creep.pickup(source) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(source);
+                } else if (creep.carry.energy == creep.carryCapacity) {
+                    creep.memory.isBusy = true;
                 }
             }
         }
