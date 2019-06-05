@@ -20,19 +20,19 @@ class SpawnManager {
         let repairerCurrent: number = _.filter(Game.creeps, (c) => c.memory.role == 'repairer').length;
 
         if (type === 'harvester') {
-            if (harvesterCurrent / totalScreeps < harvesterRatio) { return true; }
+            if (harvesterCurrent === 0 || harvesterCurrent / totalScreeps < harvesterRatio) { return true; }
             return false;
         } else if (type === 'carrier') {
-            if (carrierCurrent / totalScreeps < carrierRatio) { return true; }
+            if (carrierCurrent === 0 || carrierCurrent / totalScreeps < carrierRatio) { return true; }
             return false;
         } else if (type === 'upgrader') {
-            if (upgraderCurrent / totalScreeps < upgraderRatio) { return true; }
+            if (upgraderCurrent === 0 || upgraderCurrent / totalScreeps < upgraderRatio) { return true; }
             return false;
         } else if (type === 'builder') {
-            if (builderCurrent / totalScreeps < builderRatio) { return true; }
+            if (builderCurrent === 0 || builderCurrent / totalScreeps < builderRatio) { return true; }
             return false;
         } else if (type === 'repairer') {
-            if (repairerCurrent / totalScreeps < repairerRatio) { return true; }
+            if (repairerCurrent === 0 || repairerCurrent / totalScreeps < repairerRatio) { return true; }
             return false;
         } else {
             return false;
