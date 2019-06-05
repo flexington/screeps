@@ -41,7 +41,7 @@ class SpawnManager {
 
     public spawn() {
         if (this.checkUnits('harvester')) {
-            Game.spawns['London'].spawnCreep([MOVE, WORK, WORK], 'H-' + Game.time, {
+            Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK], 'H-' + Game.time, {
                 memory: { role: 'harvester', isBusy: false }
             });
         } else if (this.checkUnits('carrier')) {
