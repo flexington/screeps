@@ -69,6 +69,9 @@ class GameManager {
     }
     check() {
     }
+    finalize() {
+        Memory.Config = this.config;
+    }
 }
 class Harvester {
     static run(creep) {
@@ -114,11 +117,6 @@ class Helper {
 class MapManager {
     checkRooms() {
         if (this._lastTick === undefined || Game.time > this._lastTick + 500) {
-            for (let name in Game.rooms) {
-                let config;
-                config.roomName = name;
-                config.maxHarvester = this.getMaxHarvesters(Game.rooms[name]);
-            }
         }
         return this.roomConfig;
     }
@@ -270,12 +268,10 @@ class SpawnManager {
         }
     }
 }
-let mapManager = new MapManager();
 let unitManager = new SpawnManager();
 module.exports.loop = () => {
     let gameManager = new GameManager();
     console.log(gameManager.config.lastTick);
-    mapManager.checkRooms();
     unitManager.cleanup();
     unitManager.spawn();
     let creeps = Game.creeps;
@@ -297,5 +293,6 @@ module.exports.loop = () => {
             Upgrader.run(creep);
         }
     }
+    gameManager.finalize();
 };
 //# sourceMappingURL=main.js.map
