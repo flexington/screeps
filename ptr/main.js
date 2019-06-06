@@ -64,7 +64,7 @@ class GameManager {
     constructor() {
         this.config = Memory.Config;
         if (this.config === undefined) {
-            this.config.lastTick = Game.time;
+            this.config = { lastTick: Game.time };
         }
     }
     check() {
