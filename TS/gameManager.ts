@@ -12,4 +12,8 @@ class GameManager {
 
     public check() {
     }
+
+    public finalize() {
+        Memory.Config = this.config;
+    }
 }

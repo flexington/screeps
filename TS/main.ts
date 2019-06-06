@@ -6,14 +6,11 @@
 /// <reference path="upgrader.ts" />
 /// <reference path="spawnManager.ts" />
 
-let mapManager: MapManager = new MapManager();
 let unitManager: SpawnManager = new SpawnManager();
-// let roomConfig: RoomConfig;
 
 module.exports.loop = () => {
     let gameManager: GameManager = new GameManager();
     console.log(gameManager.config.lastTick);
-    mapManager.checkRooms();
     unitManager.cleanup();
     unitManager.spawn();
 
@@ -26,4 +23,6 @@ module.exports.loop = () => {
         else if (creep.memory.role === 'repairer') { Repairer.run(creep); }
         else if (creep.memory.role === 'upgrader') { Upgrader.run(creep); }
     }
+
+    gameManager.finalize();
 }

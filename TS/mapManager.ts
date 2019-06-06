@@ -4,11 +4,11 @@ class MapManager {
 
     public checkRooms() {
         if (this._lastTick === undefined || Game.time > this._lastTick + 500) {
-            for (let name in Game.rooms) {
-                let config: RoomConfig;
-                config.roomName = name;
-                config.maxHarvester = this.getMaxHarvesters(Game.rooms[name]);
-            }
+            // for (let name in Game.rooms) {
+            //     let config: RoomConfig;
+            //     config.roomName = name;
+            //     config.maxHarvester = this.getMaxHarvesters(Game.rooms[name]);
+            // }
         }
         return this.roomConfig;
     }
