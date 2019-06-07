@@ -1,5 +1,6 @@
 /// <reference path="builder.ts" />
 /// <reference path="carrier.ts" />
+/// <reference path="gameManager.ts" />
 /// <reference path="harvester.ts" />
 /// <reference path="mapManager.ts" />
 /// <reference path="repairer.ts" />
@@ -7,13 +8,12 @@
 /// <reference path="spawnManager.ts" />
 
 let unitManager: SpawnManager = new SpawnManager();
+let gameManager: GameManager = new GameManager();
 
 module.exports.loop = () => {
-    let gameManager: GameManager = new GameManager();
-    console.log(gameManager.config.lastTick);
+    gameManager.update();
     unitManager.cleanup();
     unitManager.spawn();
-
     let creeps = Game.creeps;
     for (let name in creeps) {
         let creep = creeps[name];

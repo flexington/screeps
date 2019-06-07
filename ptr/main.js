@@ -61,16 +61,42 @@ class Carrier {
     }
 }
 class GameManager {
-    constructor() {
+    update() {
         this.config = Memory.Config;
-        if (this.config === undefined) {
-            this.config = { lastTick: Game.time };
-        }
-    }
-    check() {
+        if (this.config === undefined)
+            this.config = { lastTick: Game.time - 501 };
+        if (!this.canCheck())
+            return;
+        this.checkSources();
     }
     finalize() {
+        if (this.canCheck)
+            this.config.lastTick = Game.time;
         Memory.Config = this.config;
+    }
+    canCheck() {
+        if (this.config.lastTick < Game.time - 60) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+    checkSources() {
+        let coordinates;
+        for (let name in Game.rooms) {
+            let room = Game.rooms[name];
+            let sources = room.find(FIND_SOURCES);
+            for (let i = 0, source; source = sources[0]; i++) {
+                let position = {
+                    room: source.pos.roomName,
+                    x: source.pos.x,
+                    y: source.pos.y
+                };
+                coordinates.push(position);
+            }
+        }
+        this.config.sources = coordinates;
     }
 }
 class Harvester {
@@ -269,9 +295,9 @@ class SpawnManager {
     }
 }
 let unitManager = new SpawnManager();
+let gameManager = new GameManager();
 module.exports.loop = () => {
-    let gameManager = new GameManager();
-    console.log(gameManager.config.lastTick);
+    gameManager.update();
     unitManager.cleanup();
     unitManager.spawn();
     let creeps = Game.creeps;
