@@ -1,5 +1,4 @@
 class SpawnManager {
-
     private checkUnits(type: string): boolean {
         // Unit ratio
         let unitTypes: number = 6;

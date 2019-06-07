@@ -60,6 +60,16 @@ class Carrier {
         }
     }
 }
+class GameManager {
+    constructor() {
+        this.config = Memory.Config;
+        if (this.config === undefined) {
+            this.config.lastTick = Game.time;
+        }
+    }
+    check() {
+    }
+}
 class Harvester {
     static run(creep) {
         const target = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
@@ -99,6 +109,41 @@ class Helper {
                 }
             }
         }
+    }
+}
+class MapManager {
+    checkRooms() {
+        if (this._lastTick === undefined || Game.time > this._lastTick + 500) {
+            for (let name in Game.rooms) {
+                let config;
+                config.roomName = name;
+                config.maxHarvester = this.getMaxHarvesters(Game.rooms[name]);
+            }
+        }
+        return this.roomConfig;
+    }
+    getMaxHarvesters(room) {
+        let sources = room.find(FIND_SOURCES);
+        let totalHarvester;
+        for (let i, source; source = sources[i]; i++) {
+            let position = source.pos;
+            totalHarvester += this.getWalkableFields(position, position.roomName).length;
+        }
+        return totalHarvester;
+    }
+    getWalkableFields(position, room) {
+        let terrain = new Room.Terrain(room);
+        let fields;
+        for (let x = position.x - 1; x < position.x + 1; x++) {
+            for (let y = position.y - 1; y < position.y + 1; y++) {
+                if (x === position.x && y === position.y)
+                    continue;
+                if (terrain.get(x, y) != 2) {
+                    fields.push(new RoomPosition(x, y, room));
+                }
+            }
+        }
+        return fields;
     }
 }
 class Repairer {
@@ -225,8 +270,13 @@ class SpawnManager {
         }
     }
 }
+let mapManager = new MapManager();
 let unitManager = new SpawnManager();
 module.exports.loop = () => {
+    let gameManager = new GameManager();
+    console.log(gameManager.config.lastTick);
+    mapManager.checkRooms();
+    unitManager.cleanup();
     unitManager.spawn();
     let creeps = Game.creeps;
     for (let name in creeps) {
