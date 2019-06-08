@@ -1,4 +1,4 @@
-interface RoomConfig {
+interface IRoomConfig {
     roomName: string;
     maxHarvester: number;
 }

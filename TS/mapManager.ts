@@ -1,6 +1,6 @@
 class MapManager {
     private _lastTick: number;
-    public readonly roomConfig: Array<RoomConfig>;
+    public readonly roomConfig: Array<IRoomConfig>;
 
     public checkRooms() {
         if (this._lastTick === undefined || Game.time > this._lastTick + 500) {
@@ -38,14 +38,14 @@ class MapManager {
      * @param room The name of the room.
      * @returns A collection of RoomPositions representing all walkable fields AROUND that position.
      */
-    private getWalkableFields(position: RoomPosition, room: string) {
-        let terrain = new Room.Terrain(room);
+    public static getWalkableFields(position: IRoomPosition) {
+        let terrain = new Room.Terrain(position.room);
         let fields: Array<RoomPosition>;
         for (let x: number = position.x - 1; x < position.x + 1; x++) {
             for (let y: number = position.y - 1; y < position.y + 1; y++) {
                 if (x === position.x && y === position.y) continue;
                 if (terrain.get(x, y) != 2) {
-                    fields.push(new RoomPosition(x, y, room));
+                    fields.push(new RoomPosition(x, y, position.room));
                 }
             }
         }

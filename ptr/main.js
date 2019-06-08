@@ -61,20 +61,21 @@ class Carrier {
     }
 }
 class GameManager {
-    update() {
+    static update() {
         this.config = Memory.Config;
         if (this.config === undefined)
             this.config = { lastTick: Game.time - 501 };
         if (!this.canCheck())
             return;
-        this.checkSources();
+        this.FindAllSources();
+        this.getMaxHarvester();
     }
-    finalize() {
+    static finalize() {
         if (this.canCheck)
             this.config.lastTick = Game.time;
         Memory.Config = this.config;
     }
-    canCheck() {
+    static canCheck() {
         if (this.config.lastTick < Game.time - 60) {
             return true;
         }
@@ -82,61 +83,49 @@ class GameManager {
             return false;
         }
     }
-    checkSources() {
-        let coordinates;
+    static FindAllSources() {
+        let result;
         for (let name in Game.rooms) {
             let room = Game.rooms[name];
             let sources = room.find(FIND_SOURCES);
             for (let i = 0, source; source = sources[0]; i++) {
-                let position = {
-                    room: source.pos.roomName,
-                    x: source.pos.x,
-                    y: source.pos.y
+                let entry = {
+                    creeps: {},
+                    position: {
+                        id: source.id,
+                        room: source.pos.roomName,
+                        x: source.pos.x,
+                        y: source.pos.y
+                    }
                 };
-                coordinates.push(position);
+                result.push(entry);
             }
         }
-        this.config.sources = coordinates;
+        this.config.sources = result;
+    }
+    static getMaxHarvester() {
+        let sources = this.config.sources;
+        for (let i = 0; i < sources.length; i++) {
+            sources[i].maxCreeps = MapManager.getWalkableFields(sources[i].position).length;
+        }
     }
 }
 class Harvester {
     static run(creep) {
-        const target = creep.pos.findClosestByPath(FIND_SOURCES_ACTIVE);
-        if (creep.harvest(target) == ERR_NOT_IN_RANGE) {
-            creep.moveTo(target);
+        this.config = creep.memory.config;
+        if (this.config === undefined) {
+            this.init();
         }
-        else {
+        if (!this.config.atSource && creep.pos != Converter.toRoomPosition(this.config.position))
+            creep.moveTo(Converter.toRoomPosition(this.config.position));
+        else
+            this.config.atSource = true;
+        if (this.config.atSource && creep.harvest(Game.getObjectById(this.config.source.id)) == OK)
             creep.drop(RESOURCE_ENERGY);
-        }
     }
-}
-class Helper {
-    static getEnergy(creep) {
-        let containers = creep.room.find(FIND_STRUCTURES, {
-            filter: (f) => {
-                return f.structureType == STRUCTURE_CONTAINER && f.store[RESOURCE_ENERGY] > 0;
-            }
-        });
-        if (containers.length > 0) {
-            let conatiner = creep.pos.findClosestByPath(containers);
-            if (creep.withdraw(conatiner, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(conatiner);
-            }
-            else if (creep.carry.energy == creep.carryCapacity) {
-                creep.memory.isBusy = true;
-            }
-        }
-        else {
-            let sources = creep.room.find(FIND_DROPPED_RESOURCES);
-            let source = creep.pos.findClosestByPath(sources);
-            if (source != undefined) {
-                if (creep.pickup(source) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(source);
-                }
-                else if (creep.carry.energy == creep.carryCapacity) {
-                    creep.memory.isBusy = true;
-                }
-            }
+    static init() {
+        let sources = GameManager.config.sources;
+        for (let i = 0, source; source = sources[i]; i++) {
         }
     }
 }
@@ -155,15 +144,15 @@ class MapManager {
         }
         return totalHarvester;
     }
-    getWalkableFields(position, room) {
-        let terrain = new Room.Terrain(room);
+    static getWalkableFields(position) {
+        let terrain = new Room.Terrain(position.room);
         let fields;
         for (let x = position.x - 1; x < position.x + 1; x++) {
             for (let y = position.y - 1; y < position.y + 1; y++) {
                 if (x === position.x && y === position.y)
                     continue;
                 if (terrain.get(x, y) != 2) {
-                    fields.push(new RoomPosition(x, y, room));
+                    fields.push(new RoomPosition(x, y, position.room));
                 }
             }
         }
@@ -295,30 +284,46 @@ class SpawnManager {
     }
 }
 let unitManager = new SpawnManager();
-let gameManager = new GameManager();
 module.exports.loop = () => {
-    gameManager.update();
+    GameManager.update();
     unitManager.cleanup();
-    unitManager.spawn();
-    let creeps = Game.creeps;
-    for (let name in creeps) {
-        let creep = creeps[name];
-        if (creep.memory.role === 'builder') {
-            Builder.run(creep);
+    GameManager.finalize();
+};
+class Converter {
+    static toRoomPosition(position) {
+        return new RoomPosition(position.x, position.y, position.room);
+    }
+}
+class Helper {
+    static getEnergy(creep) {
+        let containers = creep.room.find(FIND_STRUCTURES, {
+            filter: (f) => {
+                return f.structureType == STRUCTURE_CONTAINER && f.store[RESOURCE_ENERGY] > 0;
+            }
+        });
+        if (containers.length > 0) {
+            let conatiner = creep.pos.findClosestByPath(containers);
+            if (creep.withdraw(conatiner, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
+                creep.moveTo(conatiner);
+            }
+            else if (creep.carry.energy == creep.carryCapacity) {
+                creep.memory.isBusy = true;
+            }
         }
-        else if (creep.memory.role === 'carrier') {
-            Carrier.run(creep);
-        }
-        else if (creep.memory.role === 'harvester') {
-            Harvester.run(creep);
-        }
-        else if (creep.memory.role === 'repairer') {
-            Repairer.run(creep);
-        }
-        else if (creep.memory.role === 'upgrader') {
-            Upgrader.run(creep);
+        else {
+            let sources = creep.room.find(FIND_DROPPED_RESOURCES);
+            let source = creep.pos.findClosestByPath(sources);
+            if (source != undefined) {
+                if (creep.pickup(source) == ERR_NOT_IN_RANGE) {
+                    creep.moveTo(source);
+                }
+                else if (creep.carry.energy == creep.carryCapacity) {
+                    creep.memory.isBusy = true;
+                }
+            }
         }
     }
-    gameManager.finalize();
-};
+    static getSoutce(id) {
+    }
+}
 //# sourceMappingURL=main.js.map

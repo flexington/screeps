@@ -25,4 +25,7 @@ class Helper {
             }
         }
     }
+
+    public static getSoutce(id:string){
+    }
 }

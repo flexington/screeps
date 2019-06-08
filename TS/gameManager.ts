@@ -1,10 +1,10 @@
 class GameManager {
-    config: IConfig;
+    public static config: IConfig;
 
     /**
      * Update the gameManager.
      */
-    public update() {
+    public static update() {
         // Load config
         this.config = Memory.Config as IConfig;
 
@@ -13,13 +13,14 @@ class GameManager {
 
         // Verify if check can be performed
         if (!this.canCheck()) return;
-        this.checkSources();
+        this.FindAllSources();
+        this.getMaxHarvester();
     }
 
     /**
      * Finalizes the game manager and save the config to the memeory.
      */
-    public finalize() {
+    public static finalize() {
         if (this.canCheck) this.config.lastTick = Game.time;
         Memory.Config = this.config;
     }
@@ -27,7 +28,7 @@ class GameManager {
     /**
      * Verifies that a check should be performed in this tick.
      */
-    private canCheck() {
+    private static canCheck() {
         if (this.config.lastTick < Game.time - 60) {
             return true;
         } else {
@@ -39,20 +40,31 @@ class GameManager {
      * Checks all sources in owned rooms
      * @returns An array of IRoomPosition describing the position of the sources
      */
-    private checkSources() {
-        let coordinates: Array<IRoomPosition>;
+    private static FindAllSources() {
+        let result: Array<ISource>;
         for (let name in Game.rooms) {
             let room: Room = Game.rooms[name];
             let sources = room.find(FIND_SOURCES);
             for (let i = 0, source: Source; source = sources[0]; i++) {
-                let position = {
-                    room: source.pos.roomName,
-                    x: source.pos.x,
-                    y: source.pos.y
-                } as IRoomPosition;
-                coordinates.push(position);
+                let entry = {
+                    creeps: {} as ICreep,
+                    position: {
+                        id: source.id,
+                        room: source.pos.roomName,
+                        x: source.pos.x,
+                        y: source.pos.y
+                    } as IRoomPosition
+                } as ISource;
+                result.push(entry);
             }
         }
-        this.config.sources = coordinates;
+        this.config.sources = result;
+    }
+
+    private static getMaxHarvester() {
+        let sources: Array<ISource> = this.config.sources;
+        for (let i = 0; i < sources.length; i++) {
+            sources[i].maxCreeps = MapManager.getWalkableFields(sources[i].position).length
+        }
     }
 }

@@ -1,4 +1,4 @@
 interface IConfig {
     lastTick: number;
-    sources: Array<IRoomPosition>;
+    sources: Array<ISource>;
 }

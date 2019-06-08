@@ -41,23 +41,23 @@ class SpawnManager {
     public spawn() {
         if (this.checkUnits('harvester')) {
             Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK], 'H-' + Game.time, {
-                memory: { role: 'harvester', isBusy: false }
+                memory: { role: 'harvester', isBusy: false } as CreepMemory
             });
         } else if (this.checkUnits('carrier')) {
             Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, MOVE, CARRY, CARRY, CARRY], 'C-' + Game.time, {
-                memory: { role: 'carrier', isBusy: false }
+                memory: { role: 'carrier', isBusy: false } as CreepMemory
             })
         } else if (this.checkUnits('upgrader')) {
             Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'U-' + Game.time, {
-                memory: { role: 'upgrader', isBusy: false }
+                memory: { role: 'upgrader', isBusy: false } as CreepMemory
             })
         } else if (this.checkUnits('builder')) {
             Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'B-' + Game.time, {
-                memory: { role: 'builder', isBusy: false }
+                memory: { role: 'builder', isBusy: false } as CreepMemory
             })
         } else if (this.checkUnits('repairer')) {
             Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'R-' + Game.time, {
-                memory: { role: 'repairer', isBusy: false }
+                memory: { role: 'repairer', isBusy: false } as CreepMemory
             })
         }
 
