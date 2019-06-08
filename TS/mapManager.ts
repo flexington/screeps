@@ -40,7 +40,7 @@ class MapManager {
      */
     public static getWalkableFields(position: IRoomPosition) {
         let terrain = new Room.Terrain(position.room);
-        let fields: Array<RoomPosition>;
+        let fields: Array<RoomPosition> = [];
         for (let x: number = position.x - 1; x < position.x + 1; x++) {
             for (let y: number = position.y - 1; y < position.y + 1; y++) {
                 if (x === position.x && y === position.y) continue;
