@@ -89,11 +89,11 @@ class GameManager {
             return true;
         }
         else if (prio.toLowerCase() === 'medium' && this.config.mediumTick < Game.time - this.config.mediumPrio) {
-            this.config.mediumPrio = Game.time;
+            this.config.mediumTick = Game.time;
             return true;
         }
         else if (prio.toLowerCase() === 'low' && this.config.lowTick < Game.time - this.config.lowPrio) {
-            this.config.lowPrio = Game.time;
+            this.config.lowTick = Game.time;
             return true;
         }
         else {
@@ -113,7 +113,12 @@ class GameManager {
                         room: source.pos.roomName,
                         x: source.pos.x,
                         y: source.pos.y
-                    }
+                    },
+                    places: MapManager.getWalkableFields({
+                        room: source.pos.roomName,
+                        x: source.pos.x,
+                        y: source.pos.y
+                    })
                 };
                 result.push(entry);
             }
@@ -152,15 +157,6 @@ class MapManager {
         }
         return this.roomConfig;
     }
-    getMaxHarvesters(room) {
-        let sources = room.find(FIND_SOURCES);
-        let totalHarvester;
-        for (let i, source; source = sources[i]; i++) {
-            let position = source.pos;
-            totalHarvester += this.getWalkableFields(position, position.roomName).length;
-        }
-        return totalHarvester;
-    }
     static getWalkableFields(position) {
         let terrain = new Room.Terrain(position.room);
         let fields = [];
@@ -169,7 +165,7 @@ class MapManager {
                 if (x === position.x && y === position.y)
                     continue;
                 if (terrain.get(x, y) != 2) {
-                    fields.push(new RoomPosition(x, y, position.room));
+                    fields.push({ x: x, y: y, room: position.room });
                 }
             }
         }
