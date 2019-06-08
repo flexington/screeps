@@ -71,7 +71,12 @@ class GameManager {
                         room: source.pos.roomName,
                         x: source.pos.x,
                         y: source.pos.y
-                    } as IRoomPosition
+                    } as IRoomPosition,
+                    places: MapManager.getWalkableFields({
+                        room: source.pos.roomName,
+                        x: source.pos.x,
+                        y: source.pos.y
+                    } as IRoomPosition) as Array<IRoomPosition>
                 } as ISource;
                 result.push(entry);
             }
