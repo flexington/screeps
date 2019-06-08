@@ -14,7 +14,6 @@ class GameManager {
         // Verify if check can be performed
         if (this.canCheck('low')) {
             this.FindAllSources();
-            this.getMaxHarvester();
         }
     }
 
@@ -82,12 +81,5 @@ class GameManager {
             }
         }
         this.config.sources = result;
-    }
-
-    private static getMaxHarvester() {
-        let sources: Array<ISource> = this.config.sources;
-        for (let i = 0; i < sources.length; i++) {
-            sources[i].maxCreeps = MapManager.getWalkableFields(sources[i].position).length
-        }
     }
 }
