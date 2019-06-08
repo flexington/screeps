@@ -19,18 +19,18 @@ class MapManager {
      * @param room The room to be considered
      * @returns The amount of harvesters this room can utilize at the same time.
      */
-    private getMaxHarvesters(room: Room) {
-        // get sources for room
-        let sources = room.find(FIND_SOURCES);
-        let totalHarvester: number;
-        // Loop through all sources
-        for (let i: number, source: Source; source = sources[i]; i++) {
-            // Get position of source
-            let position: RoomPosition = source.pos;
-            totalHarvester += this.getWalkableFields(position, position.roomName).length;
-        }
-        return totalHarvester;
-    }
+    // private static getMaxHarvesters(room: Room) {
+    //     // get sources for room
+    //     let sources = room.find(FIND_SOURCES);
+    //     let totalHarvester: number;
+    //     // Loop through all sources
+    //     for (let i: number, source: Source; source = sources[i]; i++) {
+    //         // Get position of source
+    //         let position: RoomPosition = source.pos;
+    //         totalHarvester += this.getWalkableFields(position, position.roomName).length;
+    //     }
+    //     return totalHarvester;
+    // }
 
     /**
      * Get's all walkable fields (Plain and Swamp) around a given RoomPosition, where the position itself will be ignored.
@@ -40,12 +40,12 @@ class MapManager {
      */
     public static getWalkableFields(position: IRoomPosition) {
         let terrain = new Room.Terrain(position.room);
-        let fields: Array<RoomPosition> = [];
+        let fields: Array<IRoomPosition> = [];
         for (let x: number = position.x - 1; x < position.x + 1; x++) {
             for (let y: number = position.y - 1; y < position.y + 1; y++) {
                 if (x === position.x && y === position.y) continue;
                 if (terrain.get(x, y) != 2) {
-                    fields.push(new RoomPosition(x, y, position.room));
+                    fields.push({ x: x, y: y, room: position.room } as IRoomPosition);
                 }
             }
         }
