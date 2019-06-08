@@ -64,22 +64,36 @@ class GameManager {
     static update() {
         this.config = Memory.Config;
         if (this.config === undefined)
-            this.config = { lastTick: Game.time - 501 };
-        if (!this.canCheck())
-            return;
-        this.FindAllSources();
-        this.getMaxHarvester();
+            this.reset();
+        if (this.canCheck('low')) {
+            this.FindAllSources();
+            this.getMaxHarvester();
+        }
     }
     static finalize() {
-        if (this.canCheck)
-            this.config.lastTick = Game.time;
         Memory.Config = this.config;
     }
     static reset() {
-        Memory.Config = {};
+        Memory.Config = {
+            highPrio: 60,
+            highTick: 0,
+            mediumPrio: 120,
+            mediumTick: 0,
+            lowPrio: 240,
+            lowTick: 0
+        };
     }
-    static canCheck() {
-        if (this.config.lastTick < Game.time - 60) {
+    static canCheck(prio) {
+        if (prio.toLowerCase() === 'high' && this.config.highTick < Game.time - this.config.highPrio) {
+            this.config.highTick = Game.time;
+            return true;
+        }
+        else if (prio.toLowerCase() === 'medium' && this.config.mediumTick < Game.time - this.config.mediumPrio) {
+            this.config.mediumPrio = Game.time;
+            return true;
+        }
+        else if (prio.toLowerCase() === 'low' && this.config.lowTick < Game.time - this.config.lowPrio) {
+            this.config.lowPrio = Game.time;
             return true;
         }
         else {
@@ -87,11 +101,11 @@ class GameManager {
         }
     }
     static FindAllSources() {
-        let result;
+        let result = [];
         for (let name in Game.rooms) {
             let room = Game.rooms[name];
             let sources = room.find(FIND_SOURCES);
-            for (let i = 0, source; source = sources[0]; i++) {
+            for (let i = 0, source; source = sources[i]; i++) {
                 let entry = {
                     creeps: {},
                     position: {
@@ -149,7 +163,7 @@ class MapManager {
     }
     static getWalkableFields(position) {
         let terrain = new Room.Terrain(position.room);
-        let fields;
+        let fields = [];
         for (let x = position.x - 1; x < position.x + 1; x++) {
             for (let y = position.y - 1; y < position.y + 1; y++) {
                 if (x === position.x && y === position.y)
