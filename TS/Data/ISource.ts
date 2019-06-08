@@ -16,9 +16,4 @@ interface ISource {
      * Creeps assigned to this source
      */
     creeps: Array<string>;
-
-    /**
-     * Maximum numbers of creep at this source
-     */
-    maxCreeps: number;
 }
