@@ -25,6 +25,10 @@ class GameManager {
         Memory.Config = this.config;
     }
 
+    public static reset() {
+        Memory.Config = {} as IConfig;
+    }
+
     /**
      * Verifies that a check should be performed in this tick.
      */

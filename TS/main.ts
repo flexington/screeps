@@ -8,6 +8,7 @@
 /// <reference path="spawnManager.ts" />
 
 let unitManager: SpawnManager = new SpawnManager();
+GameManager.reset();
 
 module.exports.loop = () => {
     GameManager.update();

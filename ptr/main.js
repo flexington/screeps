@@ -75,6 +75,9 @@ class GameManager {
             this.config.lastTick = Game.time;
         Memory.Config = this.config;
     }
+    static reset() {
+        Memory.Config = {};
+    }
     static canCheck() {
         if (this.config.lastTick < Game.time - 60) {
             return true;
@@ -284,6 +287,7 @@ class SpawnManager {
     }
 }
 let unitManager = new SpawnManager();
+GameManager.reset();
 module.exports.loop = () => {
     GameManager.update();
     unitManager.cleanup();
