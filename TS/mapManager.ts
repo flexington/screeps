@@ -38,14 +38,14 @@ class MapManager {
      * @param room The name of the room.
      * @returns A collection of RoomPositions representing all walkable fields AROUND that position.
      */
-    public static getWalkableFields(position: IRoomPosition) {
+    public static getWalkableFields(position: IPosition) {
         let terrain = new Room.Terrain(position.room);
-        let fields: Array<IRoomPosition> = [];
+        let fields: Array<IPosition> = [];
         for (let x: number = position.x - 1; x < position.x + 1; x++) {
             for (let y: number = position.y - 1; y < position.y + 1; y++) {
                 if (x === position.x && y === position.y) continue;
                 if (terrain.get(x, y) != 2) {
-                    fields.push({ x: x, y: y, room: position.room } as IRoomPosition);
+                    fields.push({ x: x, y: y, room: position.room } as IPosition);
                 }
             }
         }
