@@ -60,25 +60,24 @@ class SpawnManager {
     }
 
     public static spawn() {
-        if (this.checkUnits('harvester')) {
-
-        } else if (this.checkUnits('carrier')) {
-            Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, MOVE, CARRY, CARRY, CARRY], 'C-' + Game.time, {
-                memory: { role: 'carrier', isBusy: false } as CreepMemory
-            })
-        } else if (this.checkUnits('upgrader')) {
-            Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'U-' + Game.time, {
-                memory: { role: 'upgrader', isBusy: false } as CreepMemory
-            })
-        } else if (this.checkUnits('builder')) {
-            Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'B-' + Game.time, {
-                memory: { role: 'builder', isBusy: false } as CreepMemory
-            })
-        } else if (this.checkUnits('repairer')) {
-            Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'R-' + Game.time, {
-                memory: { role: 'repairer', isBusy: false } as CreepMemory
-            })
-        }
+        this.spawnHarvester();
+        //  if (this.checkUnits('carrier')) {
+        //     Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, MOVE, CARRY, CARRY, CARRY], 'C-' + Game.time, {
+        //         memory: { role: 'carrier', isBusy: false } as CreepMemory
+        //     })
+        // } else if (this.checkUnits('upgrader')) {
+        //     Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'U-' + Game.time, {
+        //         memory: { role: 'upgrader', isBusy: false } as CreepMemory
+        //     })
+        // } else if (this.checkUnits('builder')) {
+        //     Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'B-' + Game.time, {
+        //         memory: { role: 'builder', isBusy: false } as CreepMemory
+        //     })
+        // } else if (this.checkUnits('repairer')) {
+        //     Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'R-' + Game.time, {
+        //         memory: { role: 'repairer', isBusy: false } as CreepMemory
+        //     })
+        // }
     }
 
     public static cleanup() {

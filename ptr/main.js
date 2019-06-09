@@ -70,6 +70,12 @@ class GameManager {
         }
     }
     static finalize() {
+        if (this.canCheck('low'))
+            this.config.lowTick = Game.time;
+        if (this.canCheck('medium'))
+            this.config.mediumTick = Game.time;
+        if (this.canCheck('high'))
+            this.config.highTick = Game.time;
         Memory.Config = this.config;
     }
     static reset() {
@@ -83,21 +89,14 @@ class GameManager {
         };
     }
     static canCheck(prio) {
-        if (prio.toLowerCase() === 'high' && this.config.highTick < Game.time - this.config.highPrio) {
-            this.config.highTick = Game.time;
+        if (prio.toLowerCase() === 'high' && this.config.highTick < Game.time - this.config.highPrio)
             return true;
-        }
-        else if (prio.toLowerCase() === 'medium' && this.config.mediumTick < Game.time - this.config.mediumPrio) {
-            this.config.mediumTick = Game.time;
+        else if (prio.toLowerCase() === 'medium' && this.config.mediumTick < Game.time - this.config.mediumPrio)
             return true;
-        }
-        else if (prio.toLowerCase() === 'low' && this.config.lowTick < Game.time - this.config.lowPrio) {
-            this.config.lowTick = Game.time;
+        else if (prio.toLowerCase() === 'low' && this.config.lowTick < Game.time - this.config.lowPrio)
             return true;
-        }
-        else {
+        else
             return false;
-        }
     }
     static FindAllSources() {
         let result = [];
@@ -106,7 +105,6 @@ class GameManager {
             let sources = room.find(FIND_SOURCES);
             for (let i = 0, source; source = sources[i]; i++) {
                 let entry = {
-                    creeps: {},
                     position: {
                         id: source.id,
                         room: source.pos.roomName,
@@ -269,28 +267,7 @@ class SpawnManager {
         }
     }
     static spawn() {
-        if (this.checkUnits('harvester')) {
-        }
-        else if (this.checkUnits('carrier')) {
-            Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, MOVE, CARRY, CARRY, CARRY], 'C-' + Game.time, {
-                memory: { role: 'carrier', isBusy: false }
-            });
-        }
-        else if (this.checkUnits('upgrader')) {
-            Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'U-' + Game.time, {
-                memory: { role: 'upgrader', isBusy: false }
-            });
-        }
-        else if (this.checkUnits('builder')) {
-            Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'B-' + Game.time, {
-                memory: { role: 'builder', isBusy: false }
-            });
-        }
-        else if (this.checkUnits('repairer')) {
-            Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK, CARRY], 'R-' + Game.time, {
-                memory: { role: 'repairer', isBusy: false }
-            });
-        }
+        this.spawnHarvester();
     }
     static cleanup() {
         for (var name in Memory.creeps) {

@@ -21,6 +21,9 @@ class GameManager {
      * Finalizes the game manager and save the config to the memeory.
      */
     public static finalize() {
+        if (this.canCheck('low')) this.config.lowTick = Game.time;
+        if (this.canCheck('medium')) this.config.mediumTick = Game.time;
+        if (this.canCheck('high')) this.config.highTick = Game.time;
         Memory.Config = this.config;
     }
 
@@ -39,18 +42,11 @@ class GameManager {
      * Verifies that a check should be performed in this tick.
      */
     public static canCheck(prio: string) {
-        if (prio.toLowerCase() === 'high' && this.config.highTick < Game.time - this.config.highPrio) {
-            this.config.highTick = Game.time;
-            return true;
-        } else if (prio.toLowerCase() === 'medium' && this.config.mediumTick < Game.time - this.config.mediumPrio) {
-            this.config.mediumTick = Game.time;
-            return true;
-        } else if (prio.toLowerCase() === 'low' && this.config.lowTick < Game.time - this.config.lowPrio) {
-            this.config.lowTick = Game.time;
-            return true;
-        } else {
-            return false;
-        }
+        if (prio.toLowerCase() === 'high' && this.config.highTick < Game.time - this.config.highPrio) return true;
+        else if (prio.toLowerCase() === 'medium' && this.config.mediumTick < Game.time - this.config.mediumPrio) return true;
+        else if (prio.toLowerCase() === 'low' && this.config.lowTick < Game.time - this.config.lowPrio) return true;
+        else return false;
+
     }
 
     /**
@@ -64,7 +60,6 @@ class GameManager {
             let sources = room.find(FIND_SOURCES);
             for (let i = 0, source: Source; source = sources[i]; i++) {
                 let entry = {
-                    creeps: {} as ICreep,
                     position: {
                         id: source.id,
                         room: source.pos.roomName,
