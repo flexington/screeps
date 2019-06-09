@@ -1,5 +1,5 @@
 interface IHarvester {
-    position: IRoomPosition;
+    position: IPosition;
     atSource: boolean;
-    source: IRoomPosition;
+    source: IPosition;
 }
