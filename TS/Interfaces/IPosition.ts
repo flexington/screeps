@@ -1,4 +1,4 @@
-interface IRoomPosition {
+interface IPosition {
     id: string;
     room: string;
     x: number;
