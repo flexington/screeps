@@ -67,7 +67,6 @@ class GameManager {
             this.reset();
         if (this.canCheck('low')) {
             this.FindAllSources();
-            this.getMaxHarvester();
         }
     }
     static finalize() {
@@ -124,12 +123,6 @@ class GameManager {
             }
         }
         this.config.sources = result;
-    }
-    static getMaxHarvester() {
-        let sources = this.config.sources;
-        for (let i = 0; i < sources.length; i++) {
-            sources[i].maxCreeps = MapManager.getWalkableFields(sources[i].position).length;
-        }
     }
 }
 class Harvester {
@@ -214,7 +207,21 @@ class Upgrader {
     }
 }
 class SpawnManager {
-    checkUnits(type) {
+    static spawnHarvester() {
+        if (!GameManager.canCheck('low'))
+            return;
+        let sources = GameManager.config.sources;
+        for (let i = 0, source; source = sources[i]; i++) {
+            for (let y = 0, place; place = source.places[y]; y++) {
+                if (place.creepID === undefined || !Game.creeps[place.creepID]) {
+                    this.schedule([MOVE, WORK, WORK], 'H-' + Game.time, {
+                        memory: { role: 'harvester', isBusy: false }
+                    });
+                }
+            }
+        }
+    }
+    static checkUnits(type) {
         let unitTypes = 6;
         let harvesterRatio = 1 / unitTypes;
         let carrierRatio = 1 / unitTypes;
@@ -261,11 +268,8 @@ class SpawnManager {
             return false;
         }
     }
-    spawn() {
+    static spawn() {
         if (this.checkUnits('harvester')) {
-            Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK], 'H-' + Game.time, {
-                memory: { role: 'harvester', isBusy: false }
-            });
         }
         else if (this.checkUnits('carrier')) {
             Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, MOVE, CARRY, CARRY, CARRY], 'C-' + Game.time, {
@@ -288,19 +292,21 @@ class SpawnManager {
             });
         }
     }
-    cleanup() {
+    static cleanup() {
         for (var name in Memory.creeps) {
             if (!Game.creeps[name]) {
                 delete Memory.creeps[name];
             }
         }
     }
+    static schedule(bodyParts, name, opts) {
+        console.log('creep scheduled');
+    }
 }
-let unitManager = new SpawnManager();
 GameManager.reset();
 module.exports.loop = () => {
     GameManager.update();
-    unitManager.cleanup();
+    SpawnManager.cleanup();
     GameManager.finalize();
 };
 class Converter {
