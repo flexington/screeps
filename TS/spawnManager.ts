@@ -1,5 +1,26 @@
 class SpawnManager {
-    private checkUnits(type: string): boolean {
+    /**
+     * Check if a new harvester need to be spwaned
+     */
+    private static spawnHarvester() {
+        if (!GameManager.canCheck('low')) return;
+
+        // Process all know sources
+        let sources: Array<ISource> = GameManager.config.sources;
+        for (let i = 0, source: ISource; source = sources[i]; i++) {
+            // Process all places at this source
+            for (let y = 0, place: IAssignablePosition; place = source.places[y]; y++) {
+                if (place.creepID === undefined || !Game.creeps[place.creepID]) {
+                    this.schedule([MOVE, WORK, WORK], 'H-' + Game.time, {
+                        memory: { role: 'harvester', isBusy: false } as CreepMemory
+                    });
+                }
+            }
+        }
+    }
+
+    private static checkUnits(type: string): boolean {
+
         // Unit ratio
         let unitTypes: number = 6;
         let harvesterRatio: number = 1 / unitTypes;
@@ -38,11 +59,9 @@ class SpawnManager {
         }
     }
 
-    public spawn() {
+    public static spawn() {
         if (this.checkUnits('harvester')) {
-            Game.spawns['Spawn1'].spawnCreep([MOVE, WORK, WORK], 'H-' + Game.time, {
-                memory: { role: 'harvester', isBusy: false } as CreepMemory
-            });
+
         } else if (this.checkUnits('carrier')) {
             Game.spawns['Spawn1'].spawnCreep([MOVE, MOVE, MOVE, CARRY, CARRY, CARRY], 'C-' + Game.time, {
                 memory: { role: 'carrier', isBusy: false } as CreepMemory
@@ -60,14 +79,17 @@ class SpawnManager {
                 memory: { role: 'repairer', isBusy: false } as CreepMemory
             })
         }
-
     }
 
-    public cleanup() {
+    public static cleanup() {
         for (var name in Memory.creeps) {
             if (!Game.creeps[name]) {
                 delete Memory.creeps[name];
             }
         }
+    }
+
+    private static schedule(bodyParts: BodyPartConstant[], name: string, opts?: SpawnOptions) {
+        console.log('creep scheduled');
     }
 }
