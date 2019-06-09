@@ -7,12 +7,11 @@
 /// <reference path="upgrader.ts" />
 /// <reference path="spawnManager.ts" />
 
-let unitManager: SpawnManager = new SpawnManager();
 GameManager.reset();
 
 module.exports.loop = () => {
     GameManager.update();
-    unitManager.cleanup();
+    SpawnManager.cleanup();
     // unitManager.spawn();
     // let creeps = Game.creeps;
     // for (let name in creeps) {
