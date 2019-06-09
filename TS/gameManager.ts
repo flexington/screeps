@@ -38,7 +38,7 @@ class GameManager {
     /**
      * Verifies that a check should be performed in this tick.
      */
-    private static canCheck(prio: string) {
+    public static canCheck(prio: string) {
         if (prio.toLowerCase() === 'high' && this.config.highTick < Game.time - this.config.highPrio) {
             this.config.highTick = Game.time;
             return true;
@@ -70,12 +70,12 @@ class GameManager {
                         room: source.pos.roomName,
                         x: source.pos.x,
                         y: source.pos.y
-                    } as IRoomPosition,
+                    } as IPosition,
                     places: MapManager.getWalkableFields({
                         room: source.pos.roomName,
                         x: source.pos.x,
                         y: source.pos.y
-                    } as IRoomPosition) as Array<IRoomPosition>
+                    } as IPosition) as Array<IAssignablePosition>
                 } as ISource;
                 result.push(entry);
             }
