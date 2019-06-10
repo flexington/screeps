@@ -10,13 +10,23 @@ class SpawnManager {
         for (let i = 0, source: ISource; source = sources[i]; i++) {
             // Process all places at this source
             for (let y = 0, place: IAssignablePosition; place = source.places[y]; y++) {
+                // If position does not have a creep, schedule creep
                 if (place.creepID === undefined || !Game.creeps[place.creepID]) {
-                    this.schedule([MOVE, WORK, WORK], 'H-' + Game.time, {
-                        memory: { role: 'harvester', isBusy: false } as CreepMemory
-                    });
+                    let entry = {
+                        name: 'H-' + Game.time,
+                        body: [MOVE, WORK, WORK],
+                        role: 'harvester',
+                        target: {
+                            x: place.x,
+                            y: place.y,
+                            room: place.room
+                        } as IPosition
+                    } as ISpawnEntry;
+                    this.schedule(entry);
                 }
             }
         }
+
     }
 
     private static checkUnits(type: string): boolean {
@@ -88,7 +98,7 @@ class SpawnManager {
         }
     }
 
-    private static schedule(bodyParts: BodyPartConstant[], name: string, opts?: SpawnOptions) {
+    private static schedule(spawnEntry: ISpawnEntry) {
         console.log('creep scheduled');
     }
 }
