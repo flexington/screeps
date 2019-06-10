@@ -13,7 +13,7 @@ class SpawnManager {
                 // If position does not have a creep, schedule creep
                 if (place.creepID === undefined || !Game.creeps[place.creepID]) {
                     let entry = {
-                        name: 'H-' + new Date().getTime() + '-' + (Math.random() * 1000),
+                        name: 'H-' + new Date().getTime() + '-' + Math.floor(Math.random() * 100000),
                         body: [MOVE, WORK, WORK],
                         role: 'harvester',
                         target: {
