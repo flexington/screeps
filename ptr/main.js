@@ -213,7 +213,7 @@ class SpawnManager {
             for (let y = 0, place; place = source.places[y]; y++) {
                 if (place.creepID === undefined || !Game.creeps[place.creepID]) {
                     let entry = {
-                        name: 'H-' + new Date().getTime() + '-' + (Math.random() * 1000),
+                        name: 'H-' + new Date().getTime() + '-' + Math.floor(Math.random() * 100000),
                         body: [MOVE, WORK, WORK],
                         role: 'harvester',
                         target: {
@@ -276,6 +276,7 @@ class SpawnManager {
     }
     static spawn() {
         this.spawnHarvester();
+        this.executeSpawning();
     }
     static cleanup() {
         for (var name in Memory.creeps) {
@@ -290,6 +291,47 @@ class SpawnManager {
             entries = [];
         entries.push(spawnEntry);
         GameManager.config.spawnEntries = entries;
+    }
+    static executeSpawning() {
+        let entries = GameManager.config.spawnEntries;
+        if (entries === undefined || entries.length === 0)
+            return;
+        let type = this.getNextType();
+        if (type === undefined)
+            throw new Error('No type to spawn found.');
+        let spawnEntry = _.filter(entries, f => f.role === type)[0];
+        Game.spawns[0].spawnCreep(spawnEntry.body, spawnEntry.name, {
+            role: spawnEntry.role,
+            target: Converter.toRoomPosition(spawnEntry.target),
+            isBusy: spawnEntry.isBusy
+        });
+    }
+    static getNextType() {
+        let types = [
+            'harvester',
+            'carrier',
+            'upgrader',
+            'builder',
+            'repairer'
+        ];
+        let entries = GameManager.config.spawnEntries;
+        let type = GameManager.config.nexToSpawn;
+        if (type === undefined)
+            type = 'harvester';
+        for (let i = 0; i < types.length; i++) {
+            if (types[i] === type)
+                break;
+            types.push(types.splice(i, 1)[0]);
+            i--;
+        }
+        for (let i = 0; i < types.length; i++) {
+            let result = _.filter(entries, f => f.role === types[i]);
+            if (result !== undefined && result.length > 0) {
+                GameManager.config.nexToSpawn = types[i++];
+                return types[i];
+            }
+        }
+        return undefined;
     }
 }
 GameManager.reset();
