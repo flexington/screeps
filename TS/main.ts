@@ -11,6 +11,7 @@ GameManager.reset();
 
 module.exports.loop = () => {
     GameManager.update();
+    SpawnManager.spawn();
     SpawnManager.cleanup();
     // unitManager.spawn();
     // let creeps = Game.creeps;

@@ -1,4 +1,7 @@
 interface IConfig {
+    spawnEntries: Array<ISpawnEntry>;
+    lastSpawned: string;
+
     lowPrio: number;
     lowTick: number;
 

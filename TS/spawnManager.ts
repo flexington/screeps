@@ -99,6 +99,14 @@ class SpawnManager {
     }
 
     private static schedule(spawnEntry: ISpawnEntry) {
-        console.log('creep scheduled');
+        // Load or initialize spawnEntries
+        let entries: Array<ISpawnEntry> = GameManager.config.spawnEntries;
+        if (entries === undefined) entries = [];
+
+        // Add new entry
+        entries.push(spawnEntry);
+
+        // Save list
+        GameManager.config.spawnEntries = entries;
     }
 }
