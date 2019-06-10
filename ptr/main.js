@@ -151,11 +151,11 @@ class MapManager {
     static getWalkableFields(position) {
         let terrain = new Room.Terrain(position.room);
         let fields = [];
-        for (let x = position.x - 1; x < position.x + 1; x++) {
-            for (let y = position.y - 1; y < position.y + 1; y++) {
+        for (let x = position.x - 1; x <= position.x + 1; x++) {
+            for (let y = position.y - 1; y <= position.y + 1; y++) {
                 if (x === position.x && y === position.y)
                     continue;
-                if (terrain.get(x, y) != 2) {
+                if (terrain.get(x, y) !== 1) {
                     fields.push({ x: x, y: y, room: position.room });
                 }
             }
@@ -212,9 +212,17 @@ class SpawnManager {
         for (let i = 0, source; source = sources[i]; i++) {
             for (let y = 0, place; place = source.places[y]; y++) {
                 if (place.creepID === undefined || !Game.creeps[place.creepID]) {
-                    this.schedule([MOVE, WORK, WORK], 'H-' + Game.time, {
-                        memory: { role: 'harvester', isBusy: false }
-                    });
+                    let entry = {
+                        name: 'H-' + Game.time,
+                        body: [MOVE, WORK, WORK],
+                        role: 'harvester',
+                        target: {
+                            x: place.x,
+                            y: place.y,
+                            room: place.room
+                        }
+                    };
+                    this.schedule(entry);
                 }
             }
         }
@@ -276,7 +284,7 @@ class SpawnManager {
             }
         }
     }
-    static schedule(bodyParts, name, opts) {
+    static schedule(spawnEntry) {
         console.log('creep scheduled');
     }
 }
