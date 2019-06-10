@@ -213,7 +213,7 @@ class SpawnManager {
             for (let y = 0, place; place = source.places[y]; y++) {
                 if (place.creepID === undefined || !Game.creeps[place.creepID]) {
                     let entry = {
-                        name: 'H-' + Date.now(),
+                        name: 'H-' + new Date().getTime() + '-' + (Math.random() * 1000),
                         body: [MOVE, WORK, WORK],
                         role: 'harvester',
                         target: {
