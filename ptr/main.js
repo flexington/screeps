@@ -213,7 +213,7 @@ class SpawnManager {
             for (let y = 0, place; place = source.places[y]; y++) {
                 if (place.creepID === undefined || !Game.creeps[place.creepID]) {
                     let entry = {
-                        name: 'H-' + Game.time,
+                        name: 'H-' + Date.now(),
                         body: [MOVE, WORK, WORK],
                         role: 'harvester',
                         target: {
@@ -285,12 +285,17 @@ class SpawnManager {
         }
     }
     static schedule(spawnEntry) {
-        console.log('creep scheduled');
+        let entries = GameManager.config.spawnEntries;
+        if (entries === undefined)
+            entries = [];
+        entries.push(spawnEntry);
+        GameManager.config.spawnEntries = entries;
     }
 }
 GameManager.reset();
 module.exports.loop = () => {
     GameManager.update();
+    SpawnManager.spawn();
     SpawnManager.cleanup();
     GameManager.finalize();
 };
