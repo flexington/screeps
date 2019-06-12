@@ -230,53 +230,6 @@ class SpawnManager {
         }
         GameManager.config.sources = sources;
     }
-    static checkUnits(type) {
-        let unitTypes = 6;
-        let harvesterRatio = 1 / unitTypes;
-        let carrierRatio = 1 / unitTypes;
-        let upgraderRatio = 1 / unitTypes;
-        let builderRatio = 1 / unitTypes * 2;
-        let repairerRatio = 1 / unitTypes;
-        let totalScreeps = _.size(Game.creeps);
-        let harvesterCurrent = _.filter(Game.creeps, (c) => c.memory.role == 'harvester').length;
-        let carrierCurrent = _.filter(Game.creeps, (c) => c.memory.role == 'carrier').length;
-        let upgraderCurrent = _.filter(Game.creeps, (c) => c.memory.role == 'upgrader').length;
-        let builderCurrent = _.filter(Game.creeps, (c) => c.memory.role == 'builder').length;
-        let repairerCurrent = _.filter(Game.creeps, (c) => c.memory.role == 'repairer').length;
-        if (type === 'harvester') {
-            if (harvesterCurrent === 0 || harvesterCurrent / totalScreeps < harvesterRatio) {
-                return true;
-            }
-            return false;
-        }
-        else if (type === 'carrier') {
-            if (carrierCurrent === 0 || carrierCurrent / totalScreeps < carrierRatio) {
-                return true;
-            }
-            return false;
-        }
-        else if (type === 'upgrader') {
-            if (upgraderCurrent === 0 || upgraderCurrent / totalScreeps < upgraderRatio) {
-                return true;
-            }
-            return false;
-        }
-        else if (type === 'builder') {
-            if (builderCurrent === 0 || builderCurrent / totalScreeps < builderRatio) {
-                return true;
-            }
-            return false;
-        }
-        else if (type === 'repairer') {
-            if (repairerCurrent === 0 || repairerCurrent / totalScreeps < repairerRatio) {
-                return true;
-            }
-            return false;
-        }
-        else {
-            return false;
-        }
-    }
     static spawn() {
         this.spawnHarvester();
         this.executeSpawning();
