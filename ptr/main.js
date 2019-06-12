@@ -206,7 +206,7 @@ class Upgrader {
 }
 class SpawnManager {
     static spawnHarvester() {
-        if (!GameManager.canCheck('low'))
+        if (!GameManager.canCheck('medium'))
             return;
         let sources = GameManager.config.sources;
         for (let i = 0, source; source = sources[i]; i++) {
@@ -222,10 +222,13 @@ class SpawnManager {
                             room: place.room
                         }
                     };
-                    this.schedule(entry);
+                    if (this.schedule(entry) === OK)
+                        source.places[y].creepID = entry.name;
                 }
             }
+            sources[i] = source;
         }
+        GameManager.config.sources = sources;
     }
     static checkUnits(type) {
         let unitTypes = 6;
@@ -291,6 +294,7 @@ class SpawnManager {
             entries = [];
         entries.push(spawnEntry);
         GameManager.config.spawnEntries = entries;
+        return OK;
     }
     static executeSpawning() {
         let entries = GameManager.config.spawnEntries;
