@@ -3,7 +3,7 @@ class SpawnManager {
      * Check if a new harvester need to be spwaned
      */
     private static spawnHarvester() {
-        if (!GameManager.canCheck('low')) return;
+        if (!GameManager.canCheck('medium')) return;
 
         // Process all know sources
         let sources: Array<ISource> = GameManager.config.sources;
@@ -22,11 +22,12 @@ class SpawnManager {
                             room: place.room
                         } as IPosition
                     } as ISpawnEntry;
-                    this.schedule(entry);
+                    if (this.schedule(entry) === OK) source.places[y].creepID = entry.name;
                 }
             }
+            sources[i] = source;
         }
-
+        GameManager.config.sources = sources;
     }
 
     private static checkUnits(type: string): boolean {
@@ -109,6 +110,8 @@ class SpawnManager {
 
         // Save list
         GameManager.config.spawnEntries = entries;
+
+        return OK;
     }
 
     private static executeSpawning() {
