@@ -122,7 +122,7 @@ class SpawnManager {
 
         // Get creep to spawn
         let spawnEntry: ISpawnEntry = _.filter(entries, f => f.role === type)[0];
-        Game.spawns[0].spawnCreep(spawnEntry.body, spawnEntry.name, {
+        Game.spawns['Spawn1'].spawnCreep(spawnEntry.body, spawnEntry.name, {
             role: spawnEntry.role,
             target: Converter.toRoomPosition(spawnEntry.target),
             isBusy: spawnEntry.isBusy
