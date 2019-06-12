@@ -7,22 +7,11 @@
 /// <reference path="upgrader.ts" />
 /// <reference path="spawnManager.ts" />
 
-GameManager.reset();
+// GameManager.reset();
 
 module.exports.loop = () => {
     GameManager.update();
     SpawnManager.spawn();
     SpawnManager.cleanup();
-    // unitManager.spawn();
-    // let creeps = Game.creeps;
-    // for (let name in creeps) {
-    //     let creep = creeps[name];
-    //     if (creep.memory.role === 'builder') { Builder.run(creep); }
-    //     else if (creep.memory.role === 'carrier') { Carrier.run(creep); }
-    //     else if (creep.memory.role === 'harvester') { Harvester.run(creep); }
-    //     else if (creep.memory.role === 'repairer') { Repairer.run(creep); }
-    //     else if (creep.memory.role === 'upgrader') { Upgrader.run(creep); }
-    // }
-
     GameManager.finalize();
 }
