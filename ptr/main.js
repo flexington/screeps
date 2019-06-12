@@ -125,21 +125,8 @@ class GameManager {
 }
 class Harvester {
     static run(creep) {
-        this.config = creep.memory.config;
-        if (this.config === undefined) {
-            this.init();
-        }
-        if (!this.config.atSource && creep.pos != Converter.toRoomPosition(this.config.position))
-            creep.moveTo(Converter.toRoomPosition(this.config.position));
-        else
-            this.config.atSource = true;
-        if (this.config.atSource && creep.harvest(Game.getObjectById(this.config.source.id)) == OK)
-            creep.drop(RESOURCE_ENERGY);
     }
     static init() {
-        let sources = GameManager.config.sources;
-        for (let i = 0, source; source = sources[i]; i++) {
-        }
     }
 }
 class MapManager {
@@ -292,7 +279,6 @@ class SpawnManager {
         return undefined;
     }
 }
-GameManager.reset();
 module.exports.loop = () => {
     GameManager.update();
     SpawnManager.spawn();
