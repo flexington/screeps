@@ -11,7 +11,7 @@ class SpawnManager {
             // Process all places at this source
             for (let y = 0, place: IAssignablePosition; place = source.places[y]; y++) {
                 // If position does not have a creep, schedule creep
-                if (place.creepID === undefined || !Game.creeps[place.creepID]) {
+                if (place.creepID === undefined || place.creepID === '') {
                     let entry = {
                         name: 'H-' + new Date().getTime() + '-' + Math.floor(Math.random() * 100000),
                         body: [MOVE, WORK, WORK],
@@ -69,10 +69,12 @@ class SpawnManager {
         let spawnEntry: ISpawnEntry = _.filter(entries, f => f.role === type)[0];
 
         let result = Game.spawns['Spawn1'].spawnCreep(spawnEntry.body, spawnEntry.name, {
-            role: spawnEntry.role,
-            target: Converter.toRoomPosition(spawnEntry.target),
-            isBusy: spawnEntry.isBusy
-        } as SpawnOptions)
+            memory: {
+                role: spawnEntry.role,
+                target: spawnEntry.target,
+                isBusy: spawnEntry.isBusy
+            }
+        })
 
         if (result === OK) {
             entries.splice(entries.indexOf(spawnEntry), 1);
