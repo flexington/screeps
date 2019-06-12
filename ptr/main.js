@@ -297,16 +297,16 @@ class SpawnManager {
         if (entries === undefined || entries.length === 0)
             return;
         let type = this.getNextType();
-        if (type === undefined) {
-            this.setNextType();
-            type = GameManager.config.nexToSpawn;
-        }
         let spawnEntry = _.filter(entries, f => f.role === type)[0];
-        Game.spawns['Spawn1'].spawnCreep(spawnEntry.body, spawnEntry.name, {
+        let result = Game.spawns['Spawn1'].spawnCreep(spawnEntry.body, spawnEntry.name, {
             role: spawnEntry.role,
             target: Converter.toRoomPosition(spawnEntry.target),
             isBusy: spawnEntry.isBusy
         });
+        if (result === OK) {
+            entries.splice(entries.indexOf(spawnEntry), 1);
+            GameManager.config.spawnEntries = entries;
+        }
     }
     static getNextType() {
         let types = [
