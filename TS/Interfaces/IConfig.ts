@@ -1,5 +1,5 @@
 interface IConfig {
-    nexToSpawn: string;
+    lastSpawned: string;
     spawnEntries: Array<ISpawnEntry>;
 
     lowPrio: number;
