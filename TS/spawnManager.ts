@@ -118,18 +118,20 @@ class SpawnManager {
 
         // Get next creep-type to spawn
         let type: string = this.getNextType();
-        if (type === undefined) {
-            this.setNextType();
-            type = GameManager.config.nexToSpawn;
-        }
 
         // Get creep to spawn
         let spawnEntry: ISpawnEntry = _.filter(entries, f => f.role === type)[0];
-        Game.spawns['Spawn1'].spawnCreep(spawnEntry.body, spawnEntry.name, {
+
+        let result = Game.spawns['Spawn1'].spawnCreep(spawnEntry.body, spawnEntry.name, {
             role: spawnEntry.role,
             target: Converter.toRoomPosition(spawnEntry.target),
             isBusy: spawnEntry.isBusy
         } as SpawnOptions)
+
+        if (result === OK) {
+            entries.splice(entries.indexOf(spawnEntry), 1);
+            GameManager.config.spawnEntries = entries;
+        }
     }
 
     private static getNextType() {
