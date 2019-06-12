@@ -297,10 +297,12 @@ class SpawnManager {
         if (entries === undefined || entries.length === 0)
             return;
         let type = this.getNextType();
-        if (type === undefined)
-            throw new Error('No type to spawn found.');
+        if (type === undefined) {
+            this.setNextType();
+            type = GameManager.config.nexToSpawn;
+        }
         let spawnEntry = _.filter(entries, f => f.role === type)[0];
-        Game.spawns[0].spawnCreep(spawnEntry.body, spawnEntry.name, {
+        Game.spawns['Spawn1'].spawnCreep(spawnEntry.body, spawnEntry.name, {
             role: spawnEntry.role,
             target: Converter.toRoomPosition(spawnEntry.target),
             isBusy: spawnEntry.isBusy
@@ -314,20 +316,17 @@ class SpawnManager {
             'builder',
             'repairer'
         ];
-        let entries = GameManager.config.spawnEntries;
-        let type = GameManager.config.nexToSpawn;
-        if (type === undefined)
-            type = 'harvester';
-        for (let i = 0; i < types.length; i++) {
-            if (types[i] === type)
-                break;
-            types.push(types.splice(i, 1)[0]);
-            i--;
+        let type = GameManager.config.lastSpawned;
+        if (type === undefined) {
+            GameManager.config.lastSpawned = 'harvester';
+            return GameManager.config.lastSpawned;
         }
-        for (let i = 0; i < types.length; i++) {
+        let entries = GameManager.config.spawnEntries;
+        ;
+        for (let i = types.indexOf(type); i < types.length; i++) {
             let result = _.filter(entries, f => f.role === types[i]);
             if (result !== undefined && result.length > 0) {
-                GameManager.config.nexToSpawn = types[i++];
+                GameManager.config.lastSpawned = types[i];
                 return types[i];
             }
         }
