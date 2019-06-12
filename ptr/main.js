@@ -211,7 +211,7 @@ class SpawnManager {
         let sources = GameManager.config.sources;
         for (let i = 0, source; source = sources[i]; i++) {
             for (let y = 0, place; place = source.places[y]; y++) {
-                if (place.creepID === undefined || !Game.creeps[place.creepID]) {
+                if (place.creepID === undefined || place.creepID === '') {
                     let entry = {
                         name: 'H-' + new Date().getTime() + '-' + Math.floor(Math.random() * 100000),
                         body: [MOVE, WORK, WORK],
@@ -256,9 +256,11 @@ class SpawnManager {
         let type = this.getNextType();
         let spawnEntry = _.filter(entries, f => f.role === type)[0];
         let result = Game.spawns['Spawn1'].spawnCreep(spawnEntry.body, spawnEntry.name, {
-            role: spawnEntry.role,
-            target: Converter.toRoomPosition(spawnEntry.target),
-            isBusy: spawnEntry.isBusy
+            memory: {
+                role: spawnEntry.role,
+                target: spawnEntry.target,
+                isBusy: spawnEntry.isBusy
+            }
         });
         if (result === OK) {
             entries.splice(entries.indexOf(spawnEntry), 1);
